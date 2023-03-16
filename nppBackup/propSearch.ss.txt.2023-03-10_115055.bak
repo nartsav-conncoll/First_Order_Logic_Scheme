@@ -1,0 +1,82 @@
+(define rules
+  '(((visited00 goal00) (finished))
+    ((visited01 goal01) (finished))
+    ((visited02 goal02) (finished))
+    ((visited10 goal10) (finished))
+    ((visited11 goal11) (finished))
+    ((visited12 goal12) (finished))
+    ((visited20 goal20) (finished))
+    ((visited21 goal21) (finished))
+    ((visited22 goal22) (finished))
+    ((visited00 (not visited10) (not obstacle10)) (visited10))
+    ((visited00 (not visited01) (not obstacle01)) (visited01))
+    ((visited01 (not visited00) (not obstacle00)) (visited00))
+    ((visited01 (not visited02) (not obstacle02)) (visited02))
+    ((visited01 (not visited11) (not obstacle11)) (visited11))
+    ((visited02 (not visited12) (not obstacle12)) (visited12))
+    ((visited02 (not visited01) (not obstacle01)) (visited01))
+    ((visited10 (not visited00) (not obstacle00)) (visited00))
+    ((visited10 (not visited20) (not obstacle20)) (visited20))
+    ((visited10 (not visited11) (not obstacle11)) (visited11))
+    ((visited11 (not visited01) (not obstacle01)) (visited01))
+    ((visited11 (not visited12) (not obstacle12)) (visited12))
+    ((visited11 (not visited01) (not obstacle01)) (visited01))
+    ((visited11 (not visited21) (not obstacle21)) (visited21))
+    ((visited12 (not visited02) (not obstacle02)) (visited02))
+    ((visited12 (not visited22) (not obstacle22)) (visited22))
+    ((visited12 (not visited11) (not obstacle11)) (visited11))
+    ((visited20 (not visited10) (not obstacle10)) (visited10))
+    ((visited20 (not visited21) (not obstacle21)) (visited21))
+    ((visited21 (not visited20) (not obstacle20)) (visited20))
+    ((visited21 (not visited22) (not obstacle22)) (visited22))
+    ((visited21 (not visited11) (not obstacle11)) (visited11))
+    ((visited22 (not visited12) (not obstacle12)) (visited12))
+    ((visited22 (not visited21) (not obstacle21)) (visited21))))
+
+(define facts
+  '(goal22 visited00 obstacle11 obstacle21))
+
+(define ModusPonens
+  (lambda (rule)
+    (ModusPonens2 (car rule) (cadr rule))))
+      
+(define ModusPonens2 
+  (lambda (b a)
+    (if (null? b)
+        a
+    ;else
+        (let ((fact1 (car b)))
+          (if (list? fact1)
+              (let ((fact1n (cadr fact1)))
+                (if (member fact1n facts)
+                    '()
+                ;else
+                    (ModusPonens2 (cdr b) a)))
+           ;else
+              (if (member fact1 facts)
+                  (ModusPonens2 (cdr b) a)
+              ;else
+                  '()))))))
+
+(define search
+  (lambda (count)
+    (cond
+      ((member 'finished facts)
+          (display "goal found")
+          (newline))
+      ((<= count 0)
+        (display "not found")
+        (newline))
+      (else
+        (let* ((firstRule (car rules))
+               (remainingRules (append (cdr rules) (list firstRule)))
+               (newFact (ModusPonens firstRule)))
+          (cond 
+            ((null? newFact) 
+                (set! rules remainingRules)
+                (search (- count 1)))
+            (else
+                (set! rules remainingRules)
+                (set! facts (append newFact facts))
+                (search (- count 1)))))))))
+

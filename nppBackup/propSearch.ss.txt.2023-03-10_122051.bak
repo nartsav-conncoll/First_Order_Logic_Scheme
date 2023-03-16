@@ -11,16 +11,15 @@
   '((goal '(2 2)) (visited '00) (obstacle '11) (obstacle '21))
   
   
-(define (adjacent node)
-  (let ((x (car node))
-        (y (cdr node)))
-    (cons 
-          (list node (list 'adj (+ x 1) y)))
-          (list node (list 'adj (- x 1) y)))
-          (list node (list 'adj x (+ y 1))))
-          (list node (list 'adj x (- y 1)))))))
+(define adjacent (lambda (node)
+	(cond
+		[(if (member () facts))]
+	
+	)
 
-  
+
+
+))  
 
 (define ModusPonens
   (lambda (rule)

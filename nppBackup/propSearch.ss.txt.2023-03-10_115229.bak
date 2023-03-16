@@ -1,26 +1,12 @@
 (define rules
   '(
-  ;A&B are temp variables for bindings
-  ;
-	(((goal A)(visited A)) (finished))
-	(((visited A)(adj A B)((not visited) B) ((not obstacle) B))(visited B))
-	 
+	((goal A)(visited A) (finished))
+  
+  
   )
 
 (define facts
-  '((goal '(2 2)) (visited '00) (obstacle '11) (obstacle '21))
-  
-  
-(define (adjacent node)
-  (let ((x (car node))
-        (y (cdr node)))
-    (cons 
-          (list node (list 'adj (+ x 1) y)))
-          (list node (list 'adj (- x 1) y)))
-          (list node (list 'adj x (+ y 1))))
-          (list node (list 'adj x (- y 1)))))))
-
-  
+  '(goal22 visited00 obstacle11 obstacle21))
 
 (define ModusPonens
   (lambda (rule)
